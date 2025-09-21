@@ -4,9 +4,10 @@ const app = express();
 
 const PORT = process.env.PORT || 10000;
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.all('/proxy', async (req, res) => {
+app.post('/proxy', async (req, res) => {
   const url = req.query.url;
   if (!url) {
     return res.status(400).json({ error: 'Missing ?url=' });
@@ -14,12 +15,11 @@ app.all('/proxy', async (req, res) => {
 
   try {
     const response = await fetch(url, {
-      method: req.method,
+      method: 'POST',
       headers: {
-        ...req.headers,
-        host: new URL(url).host
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body)
+      body: new URLSearchParams(req.body).toString()
     });
 
     const data = await response.text();

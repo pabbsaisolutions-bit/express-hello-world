@@ -8,13 +8,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post('/proxy', async (req, res) => {
-  const url = req.query.url;
-  if (!url) {
-    return res.status(400).json({ error: 'Missing ?url=' });
-  }
-
   try {
-    const response = await fetch(url, {
+    const response = await fetch("https://api.pinterest.com/v5/oauth/token", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

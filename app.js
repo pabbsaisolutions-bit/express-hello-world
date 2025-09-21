@@ -17,8 +17,9 @@ app.post('/proxy', async (req, res) => {
       body: new URLSearchParams(req.body).toString()
     });
 
-    const data = await response.text();
-    res.status(response.status).send(data);
+    const data = await response.json();
+res.status(response.status).json(data);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
